@@ -1,0 +1,7 @@
+{
+  "chain_latency_ms": 100,
+  "lambda_spike": 5,
+  "max_retries": 2,
+  "simulation_ms": 3600000,
+  "spike_start_ms": 900000
+}

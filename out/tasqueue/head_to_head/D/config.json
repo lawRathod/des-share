@@ -1,0 +1,6 @@
+{
+  "label": "D: IOProfile{Lognormal{μ=ln50,σ=0.3}} (app)",
+  "mean_latency_ms": 50,
+  "seed": 42,
+  "simulation_ms": 3600000
+}

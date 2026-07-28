@@ -1,0 +1,15 @@
+{
+  "experiment_name": "retry_storm",
+  "run_id": "seed_42",
+  "seed": 42,
+  "sim_time_start_ms": 0,
+  "sim_time_end_ms": 3600000,
+  "godes_version": "",
+  "git_commit": "",
+  "host": "",
+  "run_started_at": "0001-01-01T00:00:00Z",
+  "run_ended_at": "0001-01-01T00:00:00Z",
+  "notes": {
+    "project": "tasqueue"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "Name": "e1-retry-storm",
+  "Seed": 42,
+  "Config": {
+    "burstCount": 5000,
+    "pollers": 10,
+    "simDuration": 180000,
+    "taskQueue": "e1-queue",
+    "threshold": 20
+  },
+  "FinalSimTime": 435000,
+  "TotalRPCs": 6,
+  "WorkflowResult": "",
+  "RetryAmplification": 0.7657613371021261,
+  "TaskAttempt": 6231,
+  "TaskCount": 8137,
+  "WorkflowSuccess": 554,
+  "ActivitySuccess": 613,
+  "ArrivalsProcessed": 1870,
+  "MetastableScore": 0,
+  "Metastable": false,
+  "BaselineEndMs": 0,
+  "MonitorStatus": {
+    "Score": 0,
+    "Metastable": false,
+    "Recovered": false,
+    "WindowsSeen": 4350,
+    "RecoveryTimeMs": null,
+    "MetastableAtMs": 0,
+    "BaselineEndMs": 0
+  }
+}

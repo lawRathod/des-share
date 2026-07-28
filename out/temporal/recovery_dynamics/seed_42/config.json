@@ -1,0 +1,11 @@
+{
+  "BurstCount": 10,
+  "SteadyRatePerSec": 1,
+  "FaultDuration": 3000,
+  "RecoveryDuration": 30000,
+  "FaultLatency": 20,
+  "FaultDropRate": 0.1,
+  "Pollers": 4,
+  "Seed": 42,
+  "TaskQueue": "e4-queue"
+}

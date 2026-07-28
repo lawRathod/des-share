@@ -1,0 +1,21 @@
+{
+  "BurstCount": 5000,
+  "Threshold": 20,
+  "SimDuration": 180000,
+  "Pollers": 10,
+  "Seed": 42,
+  "TaskQueue": "e1-queue",
+  "NetworkLatency": 0,
+  "NetworkJitter": 0,
+  "NetworkPolicy": null,
+  "PersistencePool": {
+    "MaxConns": 20,
+    "Profile": null
+  },
+  "WarmupDuration": 0,
+  "ArrivalRate": 0,
+  "BurstAt": 120000,
+  "WorkflowExecConcurrency": 20,
+  "ActivityExecConcurrency": 20,
+  "MatchingMaxTaskBatchSize": 10
+}

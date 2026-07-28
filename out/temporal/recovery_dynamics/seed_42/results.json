@@ -1,0 +1,28 @@
+{
+  "Name": "e4-recovery-dynamics",
+  "Seed": 42,
+  "Config": {
+    "burstCount": 10,
+    "faultDropRate": 0.1,
+    "faultDuration": 3000,
+    "faultLatency": 20,
+    "pollers": 4,
+    "recoveryDuration": 30000,
+    "steadyRatePerSec": 1,
+    "taskQueue": "e4-queue"
+  },
+  "FinalSimTime": 38000,
+  "TotalRPCs": 6,
+  "WorkflowResult": "",
+  "RPCCount": 6,
+  "TaskAttempt": 114,
+  "TaskCount": 160,
+  "Ratio": 0.7125,
+  "WorkflowSuccess": 8,
+  "ActivitySuccess": 9,
+  "TaskScheduleToStartLatencySum": 70000000000,
+  "TaskScheduleToStartLatencyCount": 28,
+  "DialLatencySum": 12072,
+  "DialLatencyCount": 5,
+  "ArrivalsProcessed": 44
+}

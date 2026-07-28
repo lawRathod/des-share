@@ -1,0 +1,6 @@
+{
+  "label": "C: IOProfile{Exponential{μ=50}} (app)",
+  "mean_latency_ms": 50,
+  "seed": 42,
+  "simulation_ms": 3600000
+}

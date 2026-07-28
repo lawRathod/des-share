@@ -1,0 +1,6 @@
+{
+  "label": "A: NetworkPolicy{50ms} (transport)",
+  "mean_latency_ms": 50,
+  "seed": 42,
+  "simulation_ms": 3600000
+}
