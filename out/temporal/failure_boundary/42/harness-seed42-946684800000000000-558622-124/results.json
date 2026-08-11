@@ -1,0 +1,12 @@
+{
+  "maxConns": 3,
+  "threshold": 4,
+  "retryAmp": 1.44,
+  "workflowSuccess": 100,
+  "workflowFail": 0,
+  "attemptedAdds": 144,
+  "rejectedAdds": 14,
+  "uniqueWorkflowStarts": 100,
+  "virtualElapsedMs": 2626,
+  "metastable": false
+}

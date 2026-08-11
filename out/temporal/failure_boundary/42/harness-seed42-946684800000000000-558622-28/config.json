@@ -1,0 +1,34 @@
+{
+  "workload": {
+    "workflow": "simple",
+    "burst_count": 100,
+    "burst_at_ms": 0,
+    "threshold": 1
+  },
+  "temporal": {
+    "host": "localhost:7233",
+    "namespace": "default",
+    "task_queue": "c2-boundary"
+  },
+  "harness": {
+    "seed": 42,
+    "sim_duration_ms": 60000,
+    "pollers": 4,
+    "consumer_concurrency": 5,
+    "persistence_pool_max_conns": 1
+  },
+  "sweep": {
+    "max_conns_values": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "threshold_values": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

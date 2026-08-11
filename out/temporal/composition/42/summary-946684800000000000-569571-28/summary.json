@@ -1,0 +1,37 @@
+{
+  "name": "fault_composition",
+  "run_type": "bubble",
+  "seed": 42,
+  "latency_mode": {
+    "mode": "latency",
+    "workflowSuccess": 20,
+    "workflowFail": 0,
+    "uniqueWorkflowStarts": 20,
+    "attemptedAdds": 172,
+    "rejectedAdds": 12,
+    "retryAmp": 8.6,
+    "virtualElapsedMs": 14323
+  },
+  "drop_mode": {
+    "mode": "drop",
+    "workflowSuccess": 19,
+    "workflowFail": 1,
+    "uniqueWorkflowStarts": 20,
+    "attemptedAdds": 57,
+    "rejectedAdds": 14,
+    "retryAmp": 2.85,
+    "virtualElapsedMs": 62058
+  },
+  "combined_mode": {
+    "mode": "combined",
+    "workflowSuccess": 16,
+    "workflowFail": 4,
+    "uniqueWorkflowStarts": 20,
+    "attemptedAdds": 95,
+    "rejectedAdds": 34,
+    "retryAmp": 4.75,
+    "virtualElapsedMs": 62073
+  },
+  "synergyRatio": 0.4148471615720524,
+  "isSynergistic": false
+}

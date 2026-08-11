@@ -1,0 +1,10 @@
+{
+  "mode": "latency",
+  "workflowSuccess": 20,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 20,
+  "attemptedAdds": 174,
+  "rejectedAdds": 16,
+  "retryAmp": 8.7,
+  "virtualElapsedMs": 14321
+}

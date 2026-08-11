@@ -1,0 +1,12 @@
+{
+  "experiment_name": "retry_amplification",
+  "run_id": "real-seed42-r1-1786228339043379295",
+  "seed": 42,
+  "sim_time_start_ms": 0,
+  "sim_time_end_ms": 0,
+  "godes_version": "",
+  "git_commit": "2312e9d1d6d43967cf6f74d5147fdb7450b35687",
+  "host": "bazzite.fritz.box",
+  "run_started_at": "2026-08-09T00:32:19.043379295+02:00",
+  "run_ended_at": "2026-08-09T00:32:31.448149578+02:00"
+}

@@ -1,0 +1,10 @@
+{
+  "mode": "drop",
+  "workflowSuccess": 20,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 20,
+  "attemptedAdds": 106,
+  "rejectedAdds": 68,
+  "retryAmp": 5.3,
+  "virtualElapsedMs": 63274
+}

@@ -1,0 +1,13 @@
+{
+  "name": "fault_amp",
+  "run_type": "bubble",
+  "seed": 42,
+  "workflowSuccess": 50,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 50,
+  "attemptedAdds": 525,
+  "rejectedAdds": 42,
+  "virtualElapsedMs": 10269,
+  "attemptsPerSec": 51.124744376278116,
+  "attemptsPerStart": 10.5
+}

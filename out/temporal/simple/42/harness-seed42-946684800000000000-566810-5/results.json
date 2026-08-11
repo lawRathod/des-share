@@ -1,0 +1,13 @@
+{
+  "name": "simple",
+  "run_type": "bubble",
+  "seed": 42,
+  "workflowSuccess": 360,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 360,
+  "attemptedAdds": 720,
+  "rejectedAdds": 0,
+  "virtualElapsedMs": 183957,
+  "attemptsPerSec": 3.9139581532640784,
+  "attemptsPerStart": 2
+}

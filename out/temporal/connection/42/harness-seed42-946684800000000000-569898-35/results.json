@@ -1,0 +1,17 @@
+{
+  "dropRate": 0.5,
+  "workflowSuccess": 100,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 100,
+  "attemptedAdds": 1783,
+  "rejectedAdds": 103,
+  "attemptsPerStart": 17.83,
+  "rpcCount": 7,
+  "dialSuccess": 5,
+  "dialLatencySum": 0,
+  "dialLatencyCount": 5,
+  "avgDialLatency": 0,
+  "activeConns": 12,
+  "activitySuccess": 100,
+  "virtualElapsedMs": 30536
+}

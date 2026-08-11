@@ -1,0 +1,58 @@
+{
+  "name": "simple",
+  "run_type": "bubble",
+  "seed": 42,
+  "virtualElapsedMs": 5246,
+  "levels": [
+    {
+      "level": 1,
+      "workflows": 50,
+      "workflowSuccess": 50,
+      "workflowFail": 0,
+      "uniqueWorkflowStarts": 50,
+      "attemptedAdds": 84,
+      "rejectedAdds": 8,
+      "avgScheduleToStartMs": 10.205,
+      "taskCount": 600,
+      "latencyRatio": 1
+    },
+    {
+      "level": 2,
+      "workflows": 100,
+      "workflowSuccess": 100,
+      "workflowFail": 0,
+      "uniqueWorkflowStarts": 100,
+      "attemptedAdds": 117,
+      "rejectedAdds": 8,
+      "avgScheduleToStartMs": 22.279166663333335,
+      "taskCount": 1200,
+      "latencyRatio": 2.183161848440307
+    },
+    {
+      "level": 4,
+      "workflows": 200,
+      "workflowSuccess": 200,
+      "workflowFail": 0,
+      "uniqueWorkflowStarts": 200,
+      "attemptedAdds": 205,
+      "rejectedAdds": 9,
+      "avgScheduleToStartMs": 43.85291665833333,
+      "taskCount": 2400,
+      "latencyRatio": 4.297199084599052
+    },
+    {
+      "level": 6.7,
+      "workflows": 335,
+      "workflowSuccess": 335,
+      "workflowFail": 0,
+      "uniqueWorkflowStarts": 335,
+      "attemptedAdds": 321,
+      "rejectedAdds": 8,
+      "avgScheduleToStartMs": 57.19825869303483,
+      "taskCount": 4020,
+      "latencyRatio": 5.604924908675633
+    }
+  ],
+  "maxLatencyRatio": 5.604924908675633,
+  "softAbsorption": false
+}

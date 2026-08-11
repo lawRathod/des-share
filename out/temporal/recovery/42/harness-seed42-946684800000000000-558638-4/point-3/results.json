@@ -1,0 +1,21 @@
+{
+  "index": 3,
+  "fault_start_ms": 5000,
+  "fault_end_ms": 35000,
+  "fault_drop_rate": 0.05,
+  "fault_latency_ms": 2000,
+  "persistence_pool_max_conns": 5,
+  "workflowSuccess": 200,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 200,
+  "attemptedAdds": 638,
+  "rejectedAdds": 8,
+  "virtualElapsedMs": 149262,
+  "baselineRetryRate": 22.040816326530614,
+  "maxRetryRateDuringFault": 160,
+  "retryRateAtFaultEnd": 0,
+  "finalRetryRate": 3.225806451612903,
+  "recoveryMs": 0,
+  "returnedToBaseline": true,
+  "metastableScore": 3888.34
+}

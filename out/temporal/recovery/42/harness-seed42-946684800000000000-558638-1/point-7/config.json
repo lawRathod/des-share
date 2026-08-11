@@ -1,0 +1,94 @@
+{
+  "workload": {
+    "workflow": "fault_amp",
+    "burst_count": 50,
+    "arrival_rate": 1,
+    "burst_at_ms": 0
+  },
+  "temporal": {
+    "host": "localhost:7233",
+    "namespace": "default",
+    "task_queue": "e4-queue"
+  },
+  "harness": {
+    "seed": 42,
+    "sim_duration_ms": 150000,
+    "pollers": 4,
+    "consumer_concurrency": 5,
+    "workflow_exec_concurrency": 5,
+    "activity_exec_concurrency": 5,
+    "network_latency_ms": 20,
+    "persistence_pool_max_conns": 5
+  },
+  "fault": {
+    "fault_start_ms": 5000,
+    "fault_end_ms": 35000,
+    "fault_drop_rate": 0.1,
+    "fault_latency_ms": 5000
+  },
+  "sweep": [
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.05,
+      "fault_latency_ms": 1000,
+      "persistence_pool_max_conns": 5
+    },
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.1,
+      "fault_latency_ms": 1000,
+      "persistence_pool_max_conns": 5
+    },
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.2,
+      "fault_latency_ms": 1000,
+      "persistence_pool_max_conns": 5
+    },
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.05,
+      "fault_latency_ms": 2000,
+      "persistence_pool_max_conns": 5
+    },
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.1,
+      "fault_latency_ms": 2000,
+      "persistence_pool_max_conns": 5
+    },
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.2,
+      "fault_latency_ms": 2000,
+      "persistence_pool_max_conns": 5
+    },
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.05,
+      "fault_latency_ms": 5000,
+      "persistence_pool_max_conns": 5
+    },
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.1,
+      "fault_latency_ms": 5000,
+      "persistence_pool_max_conns": 5
+    },
+    {
+      "fault_start_ms": 5000,
+      "fault_end_ms": 35000,
+      "fault_drop_rate": 0.2,
+      "fault_latency_ms": 5000,
+      "persistence_pool_max_conns": 5
+    }
+  ]
+}

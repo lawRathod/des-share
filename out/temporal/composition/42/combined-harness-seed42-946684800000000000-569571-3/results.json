@@ -1,0 +1,10 @@
+{
+  "mode": "combined",
+  "workflowSuccess": 16,
+  "workflowFail": 4,
+  "uniqueWorkflowStarts": 20,
+  "attemptedAdds": 104,
+  "rejectedAdds": 31,
+  "retryAmp": 5.2,
+  "virtualElapsedMs": 60086
+}

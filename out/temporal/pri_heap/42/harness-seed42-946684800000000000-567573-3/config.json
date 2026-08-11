@@ -1,0 +1,31 @@
+{
+  "workload": {
+    "workflow": "simple",
+    "burst_count": 50,
+    "arrival_rate": 0,
+    "burst_at_ms": 0,
+    "threshold": 50,
+    "overload_levels": [
+      1,
+      2,
+      4,
+      6.7
+    ]
+  },
+  "temporal": {
+    "host": "localhost:7233",
+    "namespace": "default",
+    "task_queue": "e2-queue"
+  },
+  "harness": {
+    "seed": 42,
+    "sim_duration_ms": 300000,
+    "pollers": 10,
+    "consumer_concurrency": 5,
+    "workflow_exec_concurrency": 5,
+    "activity_exec_concurrency": 5,
+    "network_latency_ms": 20,
+    "matching_max_task_batch_size": 10,
+    "persistence_pool_max_conns": 5
+  }
+}

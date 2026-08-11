@@ -1,0 +1,43 @@
+C3 Determinism Gate — full 8-scenario evidence (2026-08-09)
+============================================================
+GoDES commit: 2312e9d1d6d43967cf6f74d5147fdb7450b35687 (HEAD at run time)
+Toolchain: go1.26.5 linux/amd64 (testing/synctest stable, no GOEXPERIMENT)
+Gate: TestDeterminism10x — 10 fresh synctest bubbles at seed 42, sha256 of
+config.json / results.json / metrics.parquet / scenario_snapshots.parquet
+per run dir key (metadata.json report-only).
+Command: go test -tags=integration -run TestDeterminism10x -count=1 -timeout 1800s ./temporal/scenarios/<name>/
+
+RESULT: 0/8 scenarios bit-exact. config.json bit-identical in every run of
+every scenario (verified: never appears in any diff). results.json,
+metrics.parquet, scenario_snapshots.parquet differ run-to-run everywhere.
+
+ROOT CAUSE (proven, not inferred): Go's `select` statement pseudo-randomly
+chooses among ready cases using the runtime fastrand, which testing/synctest
+does NOT virtualize. Probe: 4 consecutive bubbles in one process each
+`select` 1000 times between two closed channels -> a=514/497/496/495
+(split differs per bubble). The real Temporal server inside the bubble is
+full of multi-ready-channel selects, so task routing, retry counts, virtual
+elapsed time, and snapshot series vary per run. The virtual TIMELINE is
+deterministic (identical 101 monitor windows with identical StartMs/EndMs in
+two retry_amp runs); only per-window VALUES differ. No cross-run state
+leakage (values jump non-monotonically: retry_amp attempted 496..524).
+Harness/collector/exporter are deterministic; the runtime primitive escapes
+the bubble. This is a Go 1.26 runtime limitation, not a GoDES bug.
+
+Per-scenario single-run wall (C3-1) and 10x variance (final gate runs):
+scenario         wall/run  dirs/run  config.json(16)   results variance (key counters, min..max)
+simple           24.0s     1         2b09e373dbd9371d   virtualElapsedMs 183940..184042; 360/0/720/0 identical
+retry_amp        7.1s      1         1cadd67f7137fb18   attempted 496..524, rejected 30..63, virtual 10256..10283
+pri_heap         20.5s     1         9635ccf462ba2c90   virtualElapsedMs 5109..5496, maxLatencyRatio 5.55..7.01
+rescheduler      21.9s     1         00a54e11a300b9ce   taskAttempt 3500 identical, activations 590..679, depth 1431..2054
+recovery         118.8s    1+points  6eac247c59c961fd   (harness-level artifacts vary; per-point series inside point-N/)
+composition      6.3s      3         5366df393e86a65c   all 3 modes vary on data artifacts
+connection       47.2s     5         5745abb120320ef3   attempted 798..825, rejected 44..71
+failure_boundary 53.9s     16        2e6b61840692189e   all 16 sweep points vary on data artifacts
+
+config.json hash above = run00 of the final-code gate run.
+
+Implication: C3 cannot claim bit-exact artifact determinism for
+synctest+bubble+real-server runs. The gate stays in the repo as the
+executable evidence and the variance envelope replaces the bit-exact claim.
+ADR-049 amendment flag (plan): still stands — confirmed.
