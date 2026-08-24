@@ -1,0 +1,209 @@
+[
+  {
+    "vector": {
+      "name": "compose-transfer_delay+af",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "confirm": {
+        "workload": {
+          "fault": {
+            "duration_ms": 10000,
+            "start_offset_ms": 1
+          }
+        }
+      },
+      "compose": [
+        {
+          "name": "xfer",
+          "kind": "transfer_delay",
+          "target": "transfer",
+          "start": 1,
+          "duration": 10000,
+          "rate": 100
+        },
+        {
+          "name": "af",
+          "kind": "activity_failure",
+          "target": "activity",
+          "start": 1,
+          "duration": 10000,
+          "rate": 0
+        }
+      ]
+    },
+    "modelScore": 40.46,
+    "modelAps": 11.8,
+    "modelFail": 0,
+    "bubbleRuns": [
+      {
+        "run": 0,
+        "score": 13.959999999999999,
+        "attemptsPerStart": 10.7,
+        "attemptedAdds": 535,
+        "rejectedAdds": 64,
+        "workflowSuccess": 50,
+        "workflowFail": 0,
+        "virtualElapsedMs": 10946,
+        "monitorStatus": {
+          "Score": 13.959999999999999,
+          "Metastable": true,
+          "Recovered": true,
+          "WindowsSeen": 108,
+          "RecoveryTimeMs": null,
+          "MetastableAtMs": 10100,
+          "BaselineEndMs": 5000
+        },
+        "maxMatchingBacklog": 5,
+        "finalMatchingBacklog": 2,
+        "historyPendingMax": 0,
+        "latency": {
+          "count": 37463,
+          "p50Ms": 512,
+          "p90Ms": 512,
+          "p99Ms": 512,
+          "maxMs": 1024,
+          "meanMs": 556.0113178335959
+        }
+      },
+      {
+        "run": 1,
+        "score": 13.839999999999998,
+        "attemptsPerStart": 10.52,
+        "attemptedAdds": 526,
+        "rejectedAdds": 40,
+        "workflowSuccess": 50,
+        "workflowFail": 0,
+        "virtualElapsedMs": 10793,
+        "monitorStatus": {
+          "Score": 13.839999999999998,
+          "Metastable": true,
+          "Recovered": true,
+          "WindowsSeen": 106,
+          "RecoveryTimeMs": null,
+          "MetastableAtMs": 10100,
+          "BaselineEndMs": 5000
+        },
+        "maxMatchingBacklog": 7,
+        "finalMatchingBacklog": 4,
+        "historyPendingMax": 0,
+        "latency": {
+          "count": 35804,
+          "p50Ms": 512,
+          "p90Ms": 512,
+          "p99Ms": 1024,
+          "maxMs": 1024,
+          "meanMs": 557.8927494134733
+        }
+      },
+      {
+        "run": 2,
+        "score": 14.840000000000002,
+        "attemptsPerStart": 10.4,
+        "attemptedAdds": 520,
+        "rejectedAdds": 21,
+        "workflowSuccess": 50,
+        "workflowFail": 0,
+        "virtualElapsedMs": 10760,
+        "monitorStatus": {
+          "Score": 14.840000000000002,
+          "Metastable": true,
+          "Recovered": true,
+          "WindowsSeen": 106,
+          "RecoveryTimeMs": null,
+          "MetastableAtMs": 10100,
+          "BaselineEndMs": 5000
+        },
+        "maxMatchingBacklog": 14,
+        "finalMatchingBacklog": 2,
+        "historyPendingMax": 0,
+        "latency": {
+          "count": 35297,
+          "p50Ms": 512,
+          "p90Ms": 512,
+          "p99Ms": 1024,
+          "maxMs": 2048,
+          "meanMs": 564.0785335864238
+        }
+      },
+      {
+        "run": 3,
+        "score": 15.56,
+        "attemptsPerStart": 10.58,
+        "attemptedAdds": 529,
+        "rejectedAdds": 24,
+        "workflowSuccess": 50,
+        "workflowFail": 0,
+        "virtualElapsedMs": 10803,
+        "monitorStatus": {
+          "Score": 15.56,
+          "Metastable": true,
+          "Recovered": true,
+          "WindowsSeen": 107,
+          "RecoveryTimeMs": null,
+          "MetastableAtMs": 10100,
+          "BaselineEndMs": 5000
+        },
+        "maxMatchingBacklog": 16,
+        "finalMatchingBacklog": 3,
+        "historyPendingMax": 0,
+        "latency": {
+          "count": 34993,
+          "p50Ms": 512,
+          "p90Ms": 512,
+          "p99Ms": 1024,
+          "maxMs": 2048,
+          "meanMs": 602.1595747720972
+        }
+      },
+      {
+        "run": 4,
+        "score": 15.819999999999999,
+        "attemptsPerStart": 10.42,
+        "attemptedAdds": 521,
+        "rejectedAdds": 41,
+        "workflowSuccess": 50,
+        "workflowFail": 0,
+        "virtualElapsedMs": 10823,
+        "monitorStatus": {
+          "Score": 15.819999999999999,
+          "Metastable": true,
+          "Recovered": true,
+          "WindowsSeen": 107,
+          "RecoveryTimeMs": null,
+          "MetastableAtMs": 10100,
+          "BaselineEndMs": 5000
+        },
+        "maxMatchingBacklog": 11,
+        "finalMatchingBacklog": 3,
+        "historyPendingMax": 0,
+        "latency": {
+          "count": 36515,
+          "p50Ms": 512,
+          "p90Ms": 512,
+          "p99Ms": 1024,
+          "maxMs": 1024,
+          "meanMs": 559.4090099958921
+        }
+      }
+    ],
+    "bubbleMeanAps": 10.524,
+    "bubbleMeanScore": 14.803999999999998,
+    "bubbleMeanFail": 0,
+    "bubbleMeanHorizonMs": 10825,
+    "bubbleMaxBacklog": 16,
+    "bubbleFinalBacklog": 4,
+    "bubbleHistoryMax": 0,
+    "bubbleLatency": {
+      "count": 35297,
+      "p50Ms": 512,
+      "p90Ms": 512,
+      "p99Ms": 1024,
+      "maxMs": 2048,
+      "meanMs": 564.0785335864238
+    },
+    "status": "confirmed"
+  }
+]

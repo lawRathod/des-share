@@ -1,0 +1,35 @@
+{
+  "name": "cascade_amp",
+  "run_type": "bubble",
+  "seed": 42,
+  "workflowSuccess": 1000,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 1000,
+  "attemptedAdds": 3825,
+  "attemptedActivityAdds": 3201,
+  "attemptedWorkflowAdds": 624,
+  "rejectedAdds": 613,
+  "virtualElapsedMs": 57291,
+  "attemptsPerSec": 66.76441325862702,
+  "attemptsPerStart": 3.825,
+  "monitorStatus": {
+    "Score": 18.82,
+    "Metastable": true,
+    "Recovered": true,
+    "WindowsSeen": 571,
+    "RecoveryTimeMs": null,
+    "MetastableAtMs": 10100,
+    "BaselineEndMs": 5000
+  },
+  "maxMatchingBacklog": 119,
+  "finalMatchingBacklog": 3,
+  "historyPendingMax": 27,
+  "latency": {
+    "count": 2402878,
+    "p50Ms": 2048,
+    "p90Ms": 4096,
+    "p99Ms": 8192,
+    "maxMs": 8192,
+    "meanMs": 3470.338048789826
+  }
+}

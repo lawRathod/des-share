@@ -1,0 +1,202 @@
+{
+  "env": {
+    "goVersion": "go1.27.0",
+    "gitCommit": "ba50f4054c6e79129cf11c75b254649afa98fdc9",
+    "host": "omarchy",
+    "preRegistrationHash": "0e61dde262a8eaf67926f0f366b48433da39039fad5f71260f955d2f8f968dee"
+  },
+  "cells": [
+    {
+      "name": "storm_p2_r1",
+      "workload": "storm",
+      "pollers": 2,
+      "readPartitions": 1,
+      "writePartitions": 1,
+      "runs": 3,
+      "configHash": "4ea2a2af18e1bd966afbfb64b1162c47d26448931211a12f959823b963b7057e",
+      "depth": {
+        "maxMatchingBacklogMedian": 12,
+        "finalDepthMedian": 12,
+        "historyPendingMedian": 0
+      },
+      "latency": {
+        "count": 11414,
+        "p50Ms": 512,
+        "p90Ms": 512,
+        "p99Ms": 512,
+        "maxMs": 512,
+        "meanMs": 397.71001608291635
+      },
+      "failFraction": 0,
+      "attemptsPerStart": 7.12
+    },
+    {
+      "name": "storm_p2_r4",
+      "workload": "storm",
+      "pollers": 2,
+      "readPartitions": 4,
+      "writePartitions": 4,
+      "runs": 3,
+      "configHash": "c4ab9323996b7139f2ab49771e456c844b7bff5bb3b97e0b9df3b3bc89d73121",
+      "depth": {
+        "maxMatchingBacklogMedian": 6,
+        "finalDepthMedian": 1,
+        "historyPendingMedian": 0
+      },
+      "latency": {
+        "count": 17732,
+        "p50Ms": 512,
+        "p90Ms": 512,
+        "p99Ms": 1024,
+        "maxMs": 2048,
+        "meanMs": 472.94504570178884
+      },
+      "failFraction": 0,
+      "attemptsPerStart": 6.02
+    },
+    {
+      "name": "storm_p10_r1",
+      "workload": "storm",
+      "pollers": 10,
+      "readPartitions": 1,
+      "writePartitions": 1,
+      "runs": 3,
+      "configHash": "3ea09e04c6ffed47927bcd2ae8bf691b9c5c413d9f34d608e7ca7886b3c56bb1",
+      "depth": {
+        "maxMatchingBacklogMedian": 4,
+        "finalDepthMedian": 4,
+        "historyPendingMedian": 0
+      },
+      "latency": {
+        "count": 11113,
+        "p50Ms": 512,
+        "p90Ms": 512,
+        "p99Ms": 512,
+        "maxMs": 512,
+        "meanMs": 399.193287141186
+      },
+      "failFraction": 0,
+      "attemptsPerStart": 7.02
+    },
+    {
+      "name": "storm_p10_r4",
+      "workload": "storm",
+      "pollers": 10,
+      "readPartitions": 4,
+      "writePartitions": 4,
+      "runs": 3,
+      "configHash": "85c64b8bbcbb3af8113420599b66b9312879b84889418d05e19a31136c794872",
+      "depth": {
+        "maxMatchingBacklogMedian": 0,
+        "finalDepthMedian": 0,
+        "historyPendingMedian": 0
+      },
+      "latency": {
+        "count": 11060,
+        "p50Ms": 512,
+        "p90Ms": 512,
+        "p99Ms": 512,
+        "maxMs": 512,
+        "meanMs": 400.6584086799277
+      },
+      "failFraction": 0,
+      "attemptsPerStart": 4.74
+    },
+    {
+      "name": "storm_p30_r1",
+      "workload": "storm",
+      "pollers": 30,
+      "readPartitions": 1,
+      "writePartitions": 1,
+      "runs": 3,
+      "configHash": "ab994e3a083274cc981bfc2c9e1bb4671d1ee4f45951951adee9669ab533264a",
+      "depth": {
+        "maxMatchingBacklogMedian": 0,
+        "finalDepthMedian": 0,
+        "historyPendingMedian": 0
+      },
+      "latency": {
+        "count": 10919,
+        "p50Ms": 64,
+        "p90Ms": 512,
+        "p99Ms": 512,
+        "maxMs": 512,
+        "meanMs": 388.54382269438594
+      },
+      "failFraction": 0,
+      "attemptsPerStart": 7.12
+    },
+    {
+      "name": "storm_p30_r4",
+      "workload": "storm",
+      "pollers": 30,
+      "readPartitions": 4,
+      "writePartitions": 4,
+      "runs": 3,
+      "configHash": "a1e2323bed71307965b16b5ad14a4a6e05259c811ef4aff68644d5ab30b31be2",
+      "depth": {
+        "maxMatchingBacklogMedian": 0,
+        "finalDepthMedian": 0,
+        "historyPendingMedian": 0
+      },
+      "latency": {
+        "count": 10688,
+        "p50Ms": 512,
+        "p90Ms": 512,
+        "p99Ms": 512,
+        "maxMs": 512,
+        "meanMs": 396.60362088323353
+      },
+      "failFraction": 0,
+      "attemptsPerStart": 2.84
+    },
+    {
+      "name": "calm_p10_r1",
+      "workload": "calm",
+      "pollers": 10,
+      "readPartitions": 1,
+      "writePartitions": 1,
+      "runs": 3,
+      "configHash": "d66f36437a58ac76d08ef625dbe1a5e02d867b35fce879a6e8db37dbc536bdb6",
+      "depth": {
+        "maxMatchingBacklogMedian": 0,
+        "finalDepthMedian": 0,
+        "historyPendingMedian": 0
+      },
+      "latency": {
+        "count": 472,
+        "p50Ms": 2,
+        "p90Ms": 32,
+        "p99Ms": 32,
+        "maxMs": 64,
+        "meanMs": 15.75
+      },
+      "failFraction": 0,
+      "attemptsPerStart": 2
+    },
+    {
+      "name": "calm_p10_r4",
+      "workload": "calm",
+      "pollers": 10,
+      "readPartitions": 4,
+      "writePartitions": 4,
+      "runs": 3,
+      "configHash": "4c2391f6fb47ffd7a4b0ba3e2bc49e74bff459ba13b5bcdb2b7f5664cddabf6a",
+      "depth": {
+        "maxMatchingBacklogMedian": 0,
+        "finalDepthMedian": 0,
+        "historyPendingMedian": 0
+      },
+      "latency": {
+        "count": 465,
+        "p50Ms": 4,
+        "p90Ms": 32,
+        "p99Ms": 64,
+        "maxMs": 64,
+        "meanMs": 17.9
+      },
+      "failFraction": 0,
+      "attemptsPerStart": 1.32
+    }
+  ]
+}

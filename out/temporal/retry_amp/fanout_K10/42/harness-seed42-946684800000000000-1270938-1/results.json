@@ -1,0 +1,35 @@
+{
+  "name": "fanout_amp",
+  "run_type": "bubble",
+  "seed": 42,
+  "workflowSuccess": 50,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 50,
+  "attemptedAdds": 1663,
+  "attemptedActivityAdds": 1608,
+  "attemptedWorkflowAdds": 55,
+  "rejectedAdds": 146,
+  "virtualElapsedMs": 35738,
+  "attemptsPerSec": 46.533102020258546,
+  "attemptsPerStart": 33.26,
+  "monitorStatus": {
+    "Score": 12.7,
+    "Metastable": true,
+    "Recovered": true,
+    "WindowsSeen": 356,
+    "RecoveryTimeMs": null,
+    "MetastableAtMs": 10100,
+    "BaselineEndMs": 5000
+  },
+  "maxMatchingBacklog": 92,
+  "finalMatchingBacklog": 4,
+  "historyPendingMax": 0,
+  "latency": {
+    "count": 356118,
+    "p50Ms": 512,
+    "p90Ms": 512,
+    "p99Ms": 2048,
+    "maxMs": 2048,
+    "meanMs": 731.0555995484643
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "money_transfer",
+  "run_type": "bubble",
+  "seed": 42,
+  "workflowSuccess": 0,
+  "workflowFail": 20,
+  "uniqueWorkflowStarts": 20,
+  "attemptedAdds": 240,
+  "attemptedActivityAdds": 217,
+  "attemptedWorkflowAdds": 23,
+  "rejectedAdds": 14,
+  "virtualElapsedMs": 10113,
+  "attemptsPerSec": 23.73183031741323,
+  "attemptsPerStart": 12,
+  "monitorStatus": {
+    "Score": 1.6600000000000004,
+    "Metastable": true,
+    "Recovered": true,
+    "WindowsSeen": 100,
+    "RecoveryTimeMs": null,
+    "MetastableAtMs": 10100,
+    "BaselineEndMs": 5000
+  },
+  "maxMatchingBacklog": 2,
+  "finalMatchingBacklog": 2,
+  "historyPendingMax": 0,
+  "latency": {
+    "count": 21120,
+    "p50Ms": 8,
+    "p90Ms": 32,
+    "p99Ms": 256,
+    "maxMs": 256,
+    "meanMs": 30.317613636363635
+  }
+}

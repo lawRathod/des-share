@@ -1,0 +1,11 @@
+[
+  {
+    "scenario": "cascade_bad50_qos",
+    "aps": 71.344,
+    "score": 11.042745454545464,
+    "completed": 1000,
+    "failed": 0,
+    "maxQueue": 97,
+    "metastable": true
+  }
+]

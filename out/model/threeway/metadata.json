@@ -1,0 +1,12 @@
+{
+  "arrival": 0,
+  "burst": 50,
+  "capacity": 1000,
+  "end_ms": 60000,
+  "experiment": "v2scan",
+  "grid": "examples/model/vector_scan/grids/threeway.json",
+  "model": "temporal/v2",
+  "seeds": 3,
+  "sim_time_end_ms": 60000,
+  "threshold": 3
+}

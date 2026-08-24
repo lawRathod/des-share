@@ -1,0 +1,528 @@
+[
+  {
+    "vector": {
+      "name": "calm",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 1,
+      "rate": 0
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "activity_failure-activity-1-10000-0",
+      "kind": "activity_failure",
+      "target": "activity",
+      "start": 1,
+      "duration": 10000,
+      "rate": 0
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 11.9,
+    "meanAttemptsPerStart": 11.9,
+    "meanFail": 0,
+    "meanScore": 44.788090909090904,
+    "candidate": true,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 47
+  },
+  {
+    "vector": {
+      "name": "add_drop-matching-1-10000-0.3",
+      "kind": "add_drop",
+      "target": "matching",
+      "start": 1,
+      "duration": 10000,
+      "rate": 0.3
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1.64,
+    "meanAttemptsPerStart": 1.5733333333333333,
+    "meanFail": 0,
+    "meanScore": 0.15756969696969697,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 5
+  },
+  {
+    "vector": {
+      "name": "s2s_timeout-matching-0-5000-100",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 100,
+      "fault_window": "off"
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_timeout-matching-0-5000-300",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 300,
+      "fault_window": "off"
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "wf_drop-matching-wf-0-5000-0.3",
+      "kind": "wf_drop",
+      "target": "matching-wf",
+      "start": 0,
+      "duration": 5000,
+      "rate": 0.3
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "wf_drop-matching-wf-0-5000-0.7",
+      "kind": "wf_drop",
+      "target": "matching-wf",
+      "start": 0,
+      "duration": 5000,
+      "rate": 0.7
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "poller_min-matching-0-5000-1",
+      "kind": "poller_min",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 1,
+      "fault_window": "off"
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "transfer_delay-transfer-1-10000-100",
+      "kind": "transfer_delay",
+      "target": "transfer",
+      "start": 1,
+      "duration": 10000,
+      "rate": 100
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "compose-add_drop-matching-1-10000-0.3-activity_failure-activity-1-10000-0",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "compose": [
+        {
+          "name": "add_drop-matching-1-10000-0.3",
+          "kind": "add_drop",
+          "target": "matching",
+          "start": 1,
+          "duration": 10000,
+          "rate": 0.3
+        },
+        {
+          "name": "activity_failure-activity-1-10000-0",
+          "kind": "activity_failure",
+          "target": "activity",
+          "start": 1,
+          "duration": 10000,
+          "rate": 0
+        }
+      ]
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 12.18,
+    "meanAttemptsPerStart": 12.126666666666665,
+    "meanFail": 0,
+    "meanScore": 7.085212121212121,
+    "candidate": true,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 16
+  },
+  {
+    "vector": {
+      "name": "compose-s2s_timeout-matching-0-5000-100-wf_drop-matching-wf-0-5000-0.3",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "compose": [
+        {
+          "name": "s2s_timeout-matching-0-5000-100",
+          "kind": "s2s_timeout",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 100
+        },
+        {
+          "name": "wf_drop-matching-wf-0-5000-0.3",
+          "kind": "wf_drop",
+          "target": "matching-wf",
+          "start": 0,
+          "duration": 5000,
+          "rate": 0.3
+        }
+      ]
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "compose-s2s_timeout-matching-0-5000-100-wf_drop-matching-wf-0-5000-0.7",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "compose": [
+        {
+          "name": "s2s_timeout-matching-0-5000-100",
+          "kind": "s2s_timeout",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 100
+        },
+        {
+          "name": "wf_drop-matching-wf-0-5000-0.7",
+          "kind": "wf_drop",
+          "target": "matching-wf",
+          "start": 0,
+          "duration": 5000,
+          "rate": 0.7
+        }
+      ]
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "compose-s2s_timeout-matching-0-5000-300-wf_drop-matching-wf-0-5000-0.3",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "compose": [
+        {
+          "name": "s2s_timeout-matching-0-5000-300",
+          "kind": "s2s_timeout",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 300
+        },
+        {
+          "name": "wf_drop-matching-wf-0-5000-0.3",
+          "kind": "wf_drop",
+          "target": "matching-wf",
+          "start": 0,
+          "duration": 5000,
+          "rate": 0.3
+        }
+      ]
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "compose-s2s_timeout-matching-0-5000-300-wf_drop-matching-wf-0-5000-0.7",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "compose": [
+        {
+          "name": "s2s_timeout-matching-0-5000-300",
+          "kind": "s2s_timeout",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 300
+        },
+        {
+          "name": "wf_drop-matching-wf-0-5000-0.7",
+          "kind": "wf_drop",
+          "target": "matching-wf",
+          "start": 0,
+          "duration": 5000,
+          "rate": 0.7
+        }
+      ]
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "compose-poller_min-matching-0-5000-1-s2s_timeout-matching-0-5000-100",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "confirm": {
+        "harness": {
+          "pollers": 2
+        },
+        "workload": {
+          "fault": {
+            "duration_ms": 0,
+            "start_offset_ms": 0
+          }
+        }
+      },
+      "compose": [
+        {
+          "name": "poller_min-matching-0-5000-1",
+          "kind": "poller_min",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 1
+        },
+        {
+          "name": "s2s_timeout-matching-0-5000-100",
+          "kind": "s2s_timeout",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 100
+        }
+      ]
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "compose-poller_min-matching-0-5000-1-s2s_timeout-matching-0-5000-300",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "confirm": {
+        "harness": {
+          "pollers": 2
+        },
+        "workload": {
+          "fault": {
+            "duration_ms": 0,
+            "start_offset_ms": 0
+          }
+        }
+      },
+      "compose": [
+        {
+          "name": "poller_min-matching-0-5000-1",
+          "kind": "poller_min",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 1
+        },
+        {
+          "name": "s2s_timeout-matching-0-5000-300",
+          "kind": "s2s_timeout",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 300
+        }
+      ]
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "compose-transfer_delay-transfer-1-10000-100-activity_failure-activity-1-10000-0",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "compose": [
+        {
+          "name": "transfer_delay-transfer-1-10000-100",
+          "kind": "transfer_delay",
+          "target": "transfer",
+          "start": 1,
+          "duration": 10000,
+          "rate": 100
+        },
+        {
+          "name": "activity_failure-activity-1-10000-0",
+          "kind": "activity_failure",
+          "target": "activity",
+          "start": 1,
+          "duration": 10000,
+          "rate": 0
+        }
+      ]
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 11.8,
+    "meanAttemptsPerStart": 11.800000000000002,
+    "meanFail": 0,
+    "meanScore": 40.461181818181814,
+    "candidate": true,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 47
+  }
+]

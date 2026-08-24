@@ -1,0 +1,43 @@
+[
+  {
+    "vector": {
+      "name": "compose-transfer_delay+af",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "confirm": {
+        "workload": {
+          "fault": {
+            "duration_ms": 10000,
+            "start_offset_ms": 1
+          }
+        }
+      },
+      "compose": [
+        {
+          "name": "xfer",
+          "kind": "transfer_delay",
+          "target": "transfer",
+          "start": 1,
+          "duration": 10000,
+          "rate": 100
+        },
+        {
+          "name": "af",
+          "kind": "activity_failure",
+          "target": "activity",
+          "start": 1,
+          "duration": 10000,
+          "rate": 0
+        }
+      ]
+    },
+    "seed": 0,
+    "score": 40.46,
+    "attemptsPerStart": 11.8,
+    "fail": 0,
+    "status": "confirmed"
+  }
+]

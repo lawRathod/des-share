@@ -1,0 +1,16 @@
+{
+  "experiment_name": "queue_envelope",
+  "run_id": "harness-seed42-946684800000000000-1261782-16",
+  "seed": 42,
+  "sim_time_start_ms": 0,
+  "sim_time_end_ms": 60000,
+  "godes_version": "",
+  "git_commit": "ba50f4054c6e79129cf11c75b254649afa98fdc9",
+  "host": "omarchy",
+  "run_started_at": "2000-01-01T01:00:00+01:00",
+  "run_ended_at": "2000-01-01T01:00:05.199+01:00",
+  "go_version": "go1.27.0",
+  "gomaxprocs": 1,
+  "goos": "linux",
+  "goarch": "amd64"
+}

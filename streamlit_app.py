@@ -60,6 +60,7 @@ if _db:
     st.write("all keys:", list(st.session_state.keys()))
 
 BASE = Path("out")
+
 if not BASE.exists():
     st.warning(f"'{BASE}' not found. Run experiments first.")
     st.stop()
@@ -93,25 +94,66 @@ def _pick(path: Path, alt: str = ".parquet") -> Path | None:
     return a if a.exists() else None
 
 
-def _experiment_runs(exp: Path) -> list[Path]:
-    """Find run directories in both flat and seed-partitioned layouts.
+def _experiment_runs(exp: Path, max_depth: int = 2) -> list[Path]:
+    """Find run directories in flat, seed-partitioned, and scenario layouts.
 
-    Older exporters wrote ``experiment/<run>/`` while newer experiment
-    entrypoints write ``experiment/<seed>/<run>/``. A run is identified by
-    its results file rather than by directory depth so both layouts remain
-    readable.
+    Older exporters wrote ``experiment/<run>/``; newer entrypoints write
+    ``experiment/<seed>/<run>/``; scenario groups write
+    ``experiment/<scenario>/<seed>/<run>/``. A run is identified by its
+    results.json file rather than by directory depth, so all layouts stay
+    readable. max_depth bounds how many levels below exp we descend.
     """
     runs: list[Path] = []
-    for child in sorted(exp.iterdir()):
-        if not child.is_dir():
-            continue
-        if (child / "results.json").exists():
-            runs.append(child)
-            continue
-        for nested in sorted(child.iterdir()):
-            if nested.is_dir() and (nested / "results.json").exists():
-                runs.append(nested)
+
+    def _walk(d: Path, depth: int):
+        if depth > max_depth:
+            return
+        for child in sorted(d.iterdir()):
+            if not child.is_dir():
+                continue
+            if (child / "results.json").exists():
+                runs.append(child)
+                continue
+            _walk(child, depth + 1)
+
+    _walk(exp, 1)
     return runs
+
+
+def _experiments(project: Path) -> list[Path]:
+    """Navigable experiments under a project.
+
+    Top-level dirs (retry_amp, s2s_dose, ...) plus their run-bearing or
+    Summary-bearing subdirectories (e.g. retry_amp/af, retry_amp/transfer_delay_af)
+    so scenario results and composed-confirm tables are reachable. The display
+    name is the leaf dir name. Pure numeric seed dirs (42/) are skipped — they
+    only partition runs under a real scenario."""
+    exps = [p for p in sorted(project.iterdir()) if p.is_dir()]
+    nested = []
+    for e in exps:
+        for child in sorted(e.iterdir()):
+            if not child.is_dir() or child.name.isdigit():
+                continue
+            if (child / "Summary.json").exists() or _experiment_runs(child):
+                nested.append(child)
+    return exps + nested
+
+
+def _is_scenario_group(exp: Path) -> bool:
+    """True for a top-level dir whose runs live under scenario subdirs
+    (retry_amp → af, calm, ...), i.e. it has no own results.json but its
+    children do. Such an experiment is an aggregate of its scenarios."""
+    if (exp / "results.json").exists():
+        return False
+    return any(_experiment_runs(child) for child in exp.iterdir() if child.is_dir())
+
+
+def _scenario_group_children(exp: Path) -> list[Path]:
+    """Run-bearing scenario subdirs of a scenario-group experiment."""
+    return sorted(
+        child for child in exp.iterdir()
+        if child.is_dir() and _experiment_runs(child)
+    )
 
 
 def _parse_snap(s):
@@ -119,6 +161,231 @@ def _parse_snap(s):
     if isinstance(s, (bytes, str)):
         return json.loads(s.decode() if isinstance(s, bytes) else s)
     return s if isinstance(s, dict) else {}
+
+
+# --- Summary/data-file renderers -----------------------------------------
+# The out/ tree mixes two shapes:
+#   * run-directory experiments (retry_amp, s2s_dose, queue_envelope, ...) —
+#     found by _experiment_runs();
+#   * Summary/vectors files (model/*, transfer_delay_af/Summary.json,
+#     s2s_dose/Summary.json, queue_envelope/Summary.json) — the model leg and
+#     the composed/aggregate results the report's tables are built from.
+# These renderers make the second shape visible so readers can verify the
+# report's numbers directly.
+
+_VECTOR_COLS = ["name", "kind", "aps", "fail", "score", "candidate"]
+
+
+def _flatten_vector(v: dict) -> dict:
+    """Flatten a model vector entry into a display row."""
+    return {
+        "name": v.get("name", "—"),
+        "kind": v.get("kind", ""),
+        "aps": v.get("bestAttemptsPerStart", v.get("meanAttemptsPerStart")),
+        "fail": v.get("meanFail"),
+        "score": v.get("meanScore"),
+        "candidate": v.get("candidate"),
+        "started": v.get("started"),
+        "failPerStart": v.get("failPerStart"),
+        "maxQueue": v.get("maxQueue"),
+        "drainMs": v.get("drainMs"),
+    }
+
+
+def _render_model_vectors(exp: Path) -> bool:
+    """Render a model/* experiment from vectors.json + candidates.json."""
+    vf = exp / "vectors.json"
+    cf = exp / "candidates.json"
+    if not vf.exists():
+        return False
+    rows = [_flatten_vector(v) for v in json.loads(vf.read_text())]
+    df = pd.DataFrame(rows)
+    if df.empty:
+        st.caption("vectors.json is empty.")
+        return True
+    st.subheader("Model search leg (vectors.json)")
+    st.dataframe(df[_VECTOR_COLS].rename(columns={
+        "name": "Vector", "kind": "Kind", "aps": "APS",
+        "fail": "Fail", "score": "Score", "candidate": "Candidate"}),
+        hide_index=True, width="stretch")
+    st.caption("APS = best attempts/start across seeds; Fail = mean workflow failures; "
+        "Candidate = model declared this vector worth bubble-confirming (A5 gate, ADR-071).")
+    if cf.exists():
+        cand = json.loads(cf.read_text())
+        if cand:
+            st.subheader("Candidates (bubble-confirm shortlist)")
+            st.json(cand if len(json.dumps(cand)) < 4000 else cand[:10])
+    return True
+
+
+def _render_confirm_summary(exp: Path) -> bool:
+    """Render a composed-confirm Summary.json (e.g. transfer_delay_af)."""
+    sf = exp / "Summary.json"
+    if not sf.exists():
+        return False
+    data = json.loads(sf.read_text())
+    if not isinstance(data, list):
+        return False
+    for entry in data:
+        vec = entry.get("vector") or {}
+        st.subheader(f"Composed confirm: {vec.get('name', exp.name)}")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Model APS", _fmt(entry.get("modelAps"), ".2f", "—"),
+            help="Model attempts/start for the composed vector.")
+        c2.metric("Model Fail", _d(entry.get("modelFail"), "—"),
+            help="Model workflow failures (of started).")
+        c3.metric("Model Score", _fmt(entry.get("modelScore"), ".2f", "—"),
+            help="Model monitor score.")
+        c4.metric("Bubble runs", _d(entry.get("bubbleRuns") and len(entry["bubbleRuns"]), "—"),
+            help="Number of bubble confirm runs (N).")
+        br = entry.get("bubbleRuns") or []
+        if br:
+            rows = []
+            for i, b in enumerate(br):
+                ms = b.get("monitorStatus") or {}
+                rows.append({
+                    "run": i,
+                    "aps": b.get("attemptsPerStart"),
+                    "score": ms.get("Score"),
+                    "wfOK": b.get("workflowSuccess"),
+                    "wfFail": b.get("workflowFail"),
+                    "rejected": b.get("rejectedAdds"),
+                })
+            bdf = pd.DataFrame(rows)
+            st.dataframe(bdf.rename(columns={
+                "run": "Run", "aps": "APS", "score": "Score",
+                "wfOK": "WF OK", "wfFail": "WF Fail", "rejected": "Rejected"}),
+                hide_index=True, width="stretch")
+            model_aps = entry.get("modelAps")
+            if model_aps is not None:
+                b_aps = [b.get("attemptsPerStart") for b in br if b.get("attemptsPerStart") is not None]
+                if b_aps:
+                    mean = sum(b_aps) / len(b_aps)
+                    st.caption(f"Model/real ratio: {model_aps:.2f} / {mean:.2f} = "
+                        f"{model_aps / mean:.2f}× (report §2 gap table).")
+    return True
+
+
+def _render_dose_summary(exp: Path) -> bool:
+    """Render the S2S dose-response Summary.json (knee [700,1000] ms)."""
+    sf = exp / "Summary.json"
+    if not sf.exists():
+        return False
+    data = json.loads(sf.read_text())
+    doses = data.get("doses")
+    if not isinstance(doses, list):
+        return False
+    df = pd.DataFrame([{
+        "doseMs": d.get("doseMs"),
+        "medianFail": d.get("medianFail"),
+        "minFail": d.get("minFail"),
+        "maxFail": d.get("maxFail"),
+        "medianAps": d.get("medianAps"),
+        "pollRate": d.get("pollRatePerSec"),
+        "addRate": d.get("addRatePerSec"),
+    } for d in doses])
+    st.subheader("S2S dose-response (Summary.json)")
+    st.dataframe(df.rename(columns={
+        "doseMs": "S2S deadline (ms)", "medianFail": "Median fail",
+        "minFail": "Min fail", "maxFail": "Max fail",
+        "medianAps": "Median APS", "pollRate": "Poll/s", "addRate": "Add/s"}),
+        hide_index=True, width="stretch")
+    st.caption("Report §4: bubble knee at [700, 1000]ms — fail jumps 1.0 → 0.54 → 0.0.")
+    st.line_chart(df.set_index("doseMs")[["medianFail"]])
+    return True
+
+
+def _render_envelope_summary(exp: Path) -> bool:
+    """Render the queue_envelope Summary.json (8 cells × N=3)."""
+    sf = exp / "Summary.json"
+    if not sf.exists():
+        return False
+    data = json.loads(sf.read_text())
+    cells = data.get("cells")
+    if not isinstance(cells, list):
+        return False
+    rows = []
+    for c in cells:
+        dep = c.get("depth") or {}
+        lat = c.get("latency") or {}
+        rows.append({
+            "name": c.get("name"),
+            "workload": c.get("workload"),
+            "pollers": c.get("pollers"),
+            "readPart": c.get("readPartitions"),
+            "writePart": c.get("writePartitions"),
+            "failFrac": c.get("failFraction"),
+            "aps": c.get("attemptsPerStart"),
+            "maxBacklog": dep.get("maxMatchingBacklogMedian"),
+            "finalDepth": dep.get("finalDepthMedian"),
+            "latP50": lat.get("p50Ms"),
+            "latP99": lat.get("p99Ms"),
+        })
+    df = pd.DataFrame(rows)
+    st.subheader("Queue envelope (Summary.json)")
+    st.dataframe(df.rename(columns={
+        "name": "Cell", "workload": "Workload", "pollers": "Pollers",
+        "readPart": "Read parts", "writePart": "Write parts",
+        "failFrac": "Fail frac", "aps": "APS",
+        "maxBacklog": "Max backlog", "finalDepth": "Final depth",
+        "latP50": "S2S p50 (ms)", "latP99": "S2S p99 (ms)"}),
+        hide_index=True, width="stretch")
+    return True
+
+
+def _render_summary_file(exp: Path) -> bool:
+    """Dispatch experiment-level Summary/vectors renderers; False if none apply."""
+    sf = exp / "Summary.json"
+    if sf.exists():
+        data = json.loads(sf.read_text())
+        if isinstance(data, dict):
+            if _render_dose_summary(exp):
+                return True
+            if _render_envelope_summary(exp):
+                return True
+        elif isinstance(data, list) and _render_confirm_summary(exp):
+            return True
+    if _render_model_vectors(exp):
+        return True
+    return False
+
+
+def _s2s_pct_from_buckets(row: pd.Series, p: float) -> float:
+    """Per-window S2S percentile from the 32-bucket log-scale histogram
+    (ADR-076 semantics: bucket i covers [2^(i-1), 2^i) ms, lower-bound
+    reporting, rank = round(p/100 * count), empty → 0). Mirrors Go's
+    S2SHistogram.PercentileMs exactly, so dashboard numbers match Go exports."""
+    total = 0
+    vals = []
+    for i in range(32):
+        v = row.get(f"S2SHistogram.{i}", 0)
+        if v is None or pd.isna(v):
+            v = 0
+        v = int(v)
+        vals.append(v)
+        total += v
+    if total == 0:
+        return 0.0
+    rank = max(1, round(p / 100.0 * total))
+    cum = 0
+    for i, v in enumerate(vals):
+        cum += v
+        if cum >= rank:
+            return float(0 if i == 0 else 2 ** (i - 1))
+    return float(2 ** 31)
+
+
+def _s2s_percentile_cols(snap_df: pd.DataFrame) -> pd.DataFrame:
+    """Derive per-window s2s_p50/s2s_p90/s2s_p99 columns from the histogram
+    bucket array when present (runs exported after ADR-076). Empty DataFrame
+    for older runs without the histogram."""
+    if "S2SHistogram.0" not in snap_df.columns:
+        return pd.DataFrame()
+    return pd.DataFrame({
+        "s2s_p50": snap_df.apply(lambda r: _s2s_pct_from_buckets(r, 50), axis=1),
+        "s2s_p90": snap_df.apply(lambda r: _s2s_pct_from_buckets(r, 90), axis=1),
+        "s2s_p99": snap_df.apply(lambda r: _s2s_pct_from_buckets(r, 99), axis=1),
+    })
 
 
 @st.cache_data(show_spinner=False)
@@ -138,7 +405,6 @@ def _snaps_df(path: Path) -> pd.DataFrame | None:
     # value to become NaN once a run exceeds 500 snapshots.
     sampled = raw.iloc[::step].reset_index(drop=True)
     snap_df = pd.json_normalize(sampled["snapshot"].apply(_parse_snap)).reset_index(drop=True) if "snapshot" in sampled else pd.DataFrame()
-    pool_df = pd.json_normalize(sampled["pool_stats"].apply(_parse_snap)).reset_index(drop=True) if "pool_stats" in sampled else pd.DataFrame()
     result = pd.DataFrame({
         "time_ms": sampled.get("sim_now_ms", 0),
         "queue_mean": snap_df.get("QueueMean", 0),
@@ -151,12 +417,16 @@ def _snaps_df(path: Path) -> pd.DataFrame | None:
         "attempts": snap_df.get("Attempts", 0),
         "task_rate": snap_df.get("TaskRate", 0),
         "resched_depth": snap_df.get("ReschedulerDepth", 0),
-        "pool_busy": pool_df.get("Busy", 0),
-        "pool_waiters": pool_df.get("Waiters", 0),
-        "pool_peak": pool_df.get("PeakBusy", 0),
+        "matching_backlog": snap_df.get("MatchingBacklogCount", 0),
+        "physical_backlog": snap_df.get("PhysicalMatchingBacklogCount", 0),
+        "history_pending": snap_df.get("HistoryPendingTasks", 0),
+        "hist_resched_depth": snap_df.get("HistoryReschedulerDepth", 0),
     })
     if not result.empty:
         result = result.set_index("time_ms")
+        s2s = _s2s_percentile_cols(snap_df)
+        if not s2s.empty:
+            result = result.join(s2s.reset_index(drop=True))
     return result
 
 
@@ -203,6 +473,18 @@ def _fmt(v, spec: str = ".2f", default="?"):
     return str(v)
 
 
+def _pct(sorted_vals: list, p: float) -> float:
+    """p-th percentile (0-100) of an ascending list; None when empty.
+
+    Uses nearest-rank so p99 never indexes past the end (the previous
+    int(len*p) slicing raised IndexError on small series)."""
+    n = len(sorted_vals)
+    if n == 0:
+        return 0.0
+    idx = min(n - 1, int(round(p / 100.0 * (n - 1))))
+    return sorted_vals[idx]
+
+
 def _show_results(r: dict, cols: list, meta: dict) -> None:
     """Display results dict in shape-aware metric columns.
     Supports temporal, tasqueue, and head_to_head result shapes."""
@@ -210,18 +492,44 @@ def _show_results(r: dict, cols: list, meta: dict) -> None:
 
     is_temporal = _tv(r, "TotalRPCs", "WorkflowSuccess", "AttemptedAdds") is not None
     is_head_to_head = "Label" in r
+    is_real_amp = "retryAmp" in r
+    run_type = _tv(r, "RunType") or "des"
 
-    if is_temporal:
-        ms = _tv(r, "MonitorStatus") or {}
-        if ms:
-            metastable = ms.get("Metastable", False)
-            status_icon = "✅" if metastable else "🟢"
-            status_label = "Metastable" if metastable else "Stable"
-            cols[3].metric(f"{status_icon} Status", status_label,
-                help="Monitor-declared metastability. True when weighted multi-dim score exceeds epsilon for N consecutive windows.")
+    if is_real_amp:
+        # Real-server leg (real_amp): results.json is {name, run_type: "real",
+        # workflowSuccess, workflowFail, retryAmp: {attempts, unique}, ...}.
+        cols[3].metric("Mode", _d(run_type),
+            help="Real-server run outside the synctest bubble — wall-clock, no virtual clock.")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Workflow Success", _d(r.get("workflowSuccess")),
+            help="Workflows that completed successfully.")
+        c2.metric("Workflow Fail", _d(r.get("workflowFail"), 0),
+            help="Workflows that failed.")
+        ra = r.get("retryAmp") or {}
+        c3.metric("Attempted Adds", _d(ra.get("attempts")),
+            help="Total AddActivityTask/AddWorkflowTask attempts observed by the real server.")
+        u = ra.get("unique")
+        a = ra.get("attempts")
+        if a is not None and u:
+            c4.metric("Attempts/Start", f"{a / u:.2f}",
+                help="Attempted adds per unique workflow start — the real-server retry amplification (report §7: mean 9.70).")
         else:
-            cols[3].metric("Mode", _d(_tv(r, "RunType")),
-                help="Run mode: 'bubble' = synctest virtual-clock run; 'des' = pump-driven simulation.")
+            c4.metric("Unique Starts", _d(u),
+                help="Unique workflow starts.")
+        st.caption("Real-server leg — this is the anchor the simulation is compared against "
+            "(report §7: real mean 9.70 vs sim 9.58).")
+
+    elif is_temporal:
+        ms = _tv(r, "MonitorStatus") or {}
+        if run_type == "bubble" and ms:
+            metastable = ms.get("Metastable", False)
+            status_icon = "🔴" if metastable else "🟢"
+            status_label = "Storm" if metastable else "Stable"
+            cols[3].metric(f"{status_icon} Status", status_label,
+                help="Bubble monitor: 'Storm' when the weighted multi-dim score exceeds epsilon for N consecutive windows (a metastable episode, not a permanent state); 'Stable' otherwise.")
+        else:
+            cols[3].metric("Mode", _d(run_type),
+                help="Run mode: 'bubble' = synctest virtual-clock run; 'real' = real server without a virtual clock; 'des' = pump-driven simulation.")
 
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Workflow Success", _d(_tv(r, "WorkflowSuccess")),
@@ -244,14 +552,15 @@ def _show_results(r: dict, cols: list, meta: dict) -> None:
         c3.metric("Attempts/Tasks", f"{attempts}/{count}" if (attempts or count) else "?",
             help="Total task_attempt entries vs task_count entries. Attempts include retries at both workflow and activity level. Bubble mode: attempted adds / unique workflow starts.")
         sts = _tv(r, "ScheduleToStartSeries") or []
-        if sts:
-            c4.metric("Sched→Start P50", f"{sorted(sts)[len(sts)//2]:.1f}ms",
+        sts_sorted = sorted(sts)
+        if sts_sorted:
+            c4.metric("Sched→Start P50", f"{_pct(sts_sorted, 50):.1f}ms",
                 help="Median schedule-to-start latency: time from task creation to first poller pickup. Higher = matching backlog deeper.")
         c1, c2, c3, _ = st.columns(4)
-        if sts:
-            c1.metric("P90", f"{sorted(sts)[int(len(sts)*0.9)]:.1f}ms",
+        if sts_sorted:
+            c1.metric("P90", f"{_pct(sts_sorted, 90):.1f}ms",
                 help="90th percentile schedule-to-start latency.")
-            c2.metric("P99", f"{sorted(sts)[int(len(sts)*0.99)]:.1f}ms",
+            c2.metric("P99", f"{_pct(sts_sorted, 99):.1f}ms",
                 help="99th percentile schedule-to-start latency.")
             c3.metric("Max", f"{max(sts):.1f}ms",
                 help="Maximum observed schedule-to-start latency during experiment.")
@@ -272,6 +581,41 @@ def _show_results(r: dict, cols: list, meta: dict) -> None:
                 help="Attempted adds per virtual second — the retry storm rate.")
             b2.metric("Attempts/Start", _fmt(_tv(r, "AttemptsPerStart"), ".2f", "0"),
                 help="Attempted adds per unique workflow start — bubble-mode retry amplification.")
+            b3.metric("Max Matching Backlog", _d(_tv(r, "MaxMatchingBacklog"), 0),
+                help="Run-maximum per-window matching logical backlog (approximate_backlog_count, sampled last-value per window, ADR-076). 0 when the gauge never emitted.")
+            b4.metric("Final Backlog", _d(_tv(r, "FinalMatchingBacklog"), 0),
+                help="Matching backlog in the last window that observed depth — the drained state (0 = fully drained).")
+
+            # Run-level S2S latency summary (results.latency from ADR-076/077).
+            lat = _tv(r, "Latency")
+            if isinstance(lat, dict) and lat.get("count"):
+                c1, c2, c3, c4 = st.columns(4)
+                c1.metric("S2S Latency Count", _d(lat.get("count"), 0),
+                    help="Schedule-to-start observations in this run (task_schedule_to_start_latency TimerDef).")
+                c2.metric("S2S p50", f"{lat.get('p50Ms', 0):.1f}ms",
+                    help="Median schedule-to-start latency (histogram-derived, bucket lower bounds).")
+                c3.metric("S2S p90", f"{lat.get('p90Ms', 0):.1f}ms",
+                    help="90th percentile schedule-to-start latency.")
+                c4.metric("S2S p99", f"{lat.get('p99Ms', 0):.1f}ms",
+                    help="99th percentile schedule-to-start latency.")
+                c1, c2, c3, c4 = st.columns(4)
+                c1.metric("S2S Max", f"{lat.get('maxMs', 0):.1f}ms",
+                    help="Maximum observed schedule-to-start latency.")
+                c2.metric("S2S Mean", f"{lat.get('meanMs', 0):.1f}ms",
+                    help="Bucket-midpoint mean schedule-to-start latency.")
+                c3.metric("History Pending Max", _d(_tv(r, "HistoryPendingMax"), 0),
+                    help="Run-maximum per-window history pending_tasks (per-shard last-value sum).")
+            else:
+                b1, b2, b3, _ = st.columns(4)
+                b1.metric("Max Matching Backlog", _d(_tv(r, "MaxMatchingBacklog"), 0),
+                    help="Run-maximum per-window matching logical backlog (sampled last-value per window, ADR-076). 0 when the gauge never emitted.")
+                b2.metric("Final Backlog", _d(_tv(r, "FinalMatchingBacklog"), 0),
+                    help="Matching backlog in the last window that observed depth (0 = fully drained).")
+                b3.metric("History Pending Max", _d(_tv(r, "HistoryPendingMax"), 0),
+                    help="Run-maximum per-window history pending_tasks (per-shard last-value sum).")
+            st.caption("Run-level S2S latency summary from results.latency (ADR-076/077) — "
+                "the p50/p90/p99/max/mean of schedule-to-start latency.")
+
     elif is_head_to_head:
         cols[3].metric("Score", _fmt(r.get("Score"), ".2f"),
             help="Head-to-head comparison score.")
@@ -334,26 +678,57 @@ def _run_label(meta: dict, run: Path) -> str:
     return run.name
 
 
+def _sim_duration_ms(meta: dict):
+    """Simulated duration from metadata: end−start when both exist; None if absent.
+
+    Real-server runs (run_type 'real') carry no sim clock — callers decide
+    how to label the missing value."""
+    end = meta.get("sim_time_end_ms")
+    start = meta.get("sim_time_start_ms")
+    if end is None:
+        return None
+    if start is None:
+        return end
+    return end - start
+
+
 @st.cache_data(show_spinner=False)
 def _runs_table(exp: Path) -> pd.DataFrame:
-    """Interest-sorted run index: metastable first, then monitor score desc."""
+    """Interest-sorted run index: storms first, then monitor score desc.
+
+    For a scenario-group experiment (retry_amp → af/calm/...), adds a Scenario
+    column so the top-level table aggregates its scenarios instead of being a
+    dead-end."""
+    group = _is_scenario_group(exp)
     rows = []
-    for run in _experiment_runs(exp):
+    for run in _experiment_runs(exp, max_depth=3 if group else 2):
         meta = json.loads((run / "metadata.json").read_text()) if (run / "metadata.json").exists() else {}
         r = {}
         if (run / "results.json").exists():
             r = json.loads((run / "results.json").read_text())
+        run_type = _tv(r, "RunType")
         ms = _tv(r, "MonitorStatus") or {}
         metastable = bool(ms.get("Metastable")) if ms else None
-        status = "Metastable" if metastable else ("Stable" if metastable is False else "—")
+        # Only bubble runs carry a monitor status; DES runs show their mode.
+        if run_type == "bubble" and ms:
+            status = "Storm" if metastable else "Stable"
+        else:
+            status = _d(run_type, "—")
         score = ms.get("Score") if ms else (r.get("Score") if isinstance(r, dict) else None)
+        dur_ms = _sim_duration_ms(meta)
+        scenario = ""
+        if group:
+            # run = .../retry_amp/<scenario>/42/harness-*
+            rel = run.relative_to(exp)
+            scenario = rel.parts[0] if len(rel.parts) > 1 else ""
         rows.append({
             "Run": _run_label(meta, run),
+            "Scenario": scenario,
             "Seed": meta.get("seed", "—"),
-            "Sim (ms)": meta.get("sim_time_end_ms", "—"),
+            "Sim (ms)": dur_ms,
             "Status": status,
             "Score": score,
-            "is_meta": metastable,
+            "is_meta": metastable if run_type == "bubble" else False,
             "path": str(run),
         })
     df = pd.DataFrame(rows)
@@ -362,8 +737,13 @@ def _runs_table(exp: Path) -> pd.DataFrame:
     return df
 
 
-def _render_run(run: Path, label: str) -> None:
-    """Full detail for one run: key metrics, temporal charts, pool, monitor, config."""
+def _render_run(run: Path, label: str, uid: str = "", idx: int = 0) -> None:
+    """Full detail for one run: key metrics, temporal charts, pool, monitor, config.
+
+    uid + idx namespace inner widget keys (rate_/count_/depth_/...) so the
+    same run dir under different experiments — or the same experiment with
+    multiple selected runs — doesn't collide Streamlit element keys."""
+    k = f"{uid}_{idx}_{run.name}" if uid else run.name
     # Load data — file I/O, cached, fast after first open
     results_file = run / "results.json"
     config_file = run / "config.json"
@@ -378,50 +758,66 @@ def _render_run(run: Path, label: str) -> None:
     sdf = _snaps_df(snaps_file) if snaps_file else None
 
     # Key results (fast — always show immediately)
+    rtype = _tv(r, "RunType") if isinstance(r, dict) else None
+    dur = _sim_duration_ms(meta)
     cols = st.columns(4)
     cols[0].metric("Seed", meta.get("seed", "?"),
         help="PRNG seed for deterministic reproducibility. Same seed + same config = identical run.")
-    cols[1].metric("Sim Time", f"{meta.get('sim_time_end_ms', '?')}ms",
-        help="Total simulated time in milliseconds. Not wall-clock — this is DES simulation time.")
+    if rtype == "real":
+        cols[1].metric("Wall Clock", f"{_d((r or {}).get('wallDurationMs'), '?')}ms",
+            help="Wall-clock duration of the real-server run (no virtual clock).")
+    else:
+        cols[1].metric("Sim Time", f"{_d(dur, '?')}ms",
+            help="Simulated duration (end − start). Not wall-clock — this is DES/synctest time.")
     cols[2].metric("Experiment", meta.get("experiment_name", label),
         help="Experiment name from metadata. Matches the output directory name.")
     if isinstance(r, dict):
         _show_results(r, cols, meta)
 
-    # --- Temporal-level metrics (scenario_snapshots + PoolSeries + ScheduleToStart) ---
+    # --- Temporal-level metrics (scenario_snapshots + ScheduleToStart) ---
     if sdf is not None:
         st.subheader("Temporal Metrics (per-poll snapshots)")
         rate_cols = [c for c in ["retry_amp", "window_retry_amp",
             "timeout_rate", "drop_rate", "task_rate"] if c in sdf.columns]
         count_cols = [c for c in ["queue_mean", "sched_to_start",
             "tasks", "attempts", "resched_depth"] if c in sdf.columns]
+        depth_cols = [c for c in ["matching_backlog", "physical_backlog",
+            "history_pending", "hist_resched_depth"] if c in sdf.columns]
+        lat_cols = [c for c in ["s2s_p50", "s2s_p90", "s2s_p99"] if c in sdf.columns]
         l, r = st.columns(2)
         with l:
             sel_rate = st.multiselect("Rates/proportions", rate_cols,
                 default=[c for c in ["retry_amp", "timeout_rate"] if c in rate_cols],
-                key=f"rate_{run.name}")
+                key=f"rate_{k}")
             if sel_rate:
                 st.line_chart(sdf[sel_rate])
         with r:
             sel_count = st.multiselect("Counts/latency", count_cols,
                 default=[c for c in ["queue_mean", "sched_to_start"] if c in count_cols],
-                key=f"count_{run.name}")
+                key=f"count_{k}")
             if sel_count:
                 st.line_chart(sdf[sel_count])
 
-        # --- Pool utilization (results PoolSeries, else snapshot pool_stats) ---
-        if isinstance(r, dict) and _tv(r, "PoolSeries"):
-            pool = _tv(r, "PoolSeries")
-            pool_step = max(1, len(pool) // 500)
-            pdf = pd.DataFrame(pool[::pool_step])
-            st.subheader("Connection Pool")
-            pool_cols = [c for c in ["Busy", "Waiters", "PeakBusy"] if c in pdf.columns]
-            if pool_cols:
-                st.line_chart(pdf[pool_cols])
-        elif any(c in sdf.columns for c in ("pool_busy", "pool_waiters", "pool_peak")):
-            pool_cols = [c for c in ["pool_busy", "pool_waiters", "pool_peak"] if c in sdf.columns]
-            st.subheader("Connection Pool")
-            st.line_chart(sdf[pool_cols])
+        if depth_cols:
+            st.subheader("Queue Depth (per-window sampled gauges, ADR-076)")
+            sel_depth = st.multiselect("Depth series", depth_cols,
+                default=[c for c in ["matching_backlog"] if c in depth_cols],
+                key=f"depth_{k}")
+            if sel_depth:
+                st.line_chart(sdf[sel_depth])
+            st.caption("matching_backlog = logical approximate_backlog_count (last-value per window); "
+                "physical_backlog = physical_approximate_backlog_count (ack/update paths only); "
+                "history_pending = pending_tasks (history shards); hist_resched_depth = history rescheduler.")
+
+        if lat_cols:
+            st.subheader("Schedule-to-Start Latency (per-window percentiles)")
+            sel_lat = st.multiselect("Latency series", lat_cols,
+                default=[c for c in ["s2s_p50", "s2s_p90", "s2s_p99"] if c in lat_cols],
+                key=f"lat_{k}")
+            if sel_lat:
+                st.line_chart(sdf[sel_lat])
+            st.caption("Percentiles derived from the per-window S2S histogram buckets (lower bounds; "
+                "bucket i covers [2^(i-1), 2^i) ms).")
 
         # --- Schedule-to-Start latency ---
         if isinstance(r, dict) and _tv(r, "ScheduleToStartSeries"):
@@ -450,7 +846,7 @@ def _render_run(run: Path, label: str) -> None:
                 st.line_chart(mdf[cols])
 
     # --- Metric reference ---
-    with st.expander("ℹ️ Metric Descriptions", key=f"help_{run.name}"):
+    with st.expander("ℹ️ Metric Descriptions", key=f"help_{k}"):
         st.markdown("""
 | Chart Field | Source | Description |
 |---|---|---|
@@ -460,15 +856,20 @@ def _render_run(run: Path, label: str) -> None:
 | `timeout_rate` | Snapshot.TimeoutRate | Per-window timeout fraction of tasks (service_errors / task_count). |
 | `drop_rate` | Snapshot.DropRate | Per-window drop fraction (persistence_error_with_type / task_requests). |
 | `task_rate` | Snapshot.TaskRate | Per-window new task arrivals (delta of task_requests metric). Burst spike signal. |
-| `sched_to_start` | Snapshot.ScheduleToStartLatency | Running avg schedule-to-start latency (cumulative ns/cumulative tasks → ms). |
+| `sched_to_start` | Snapshot.ScheduleToStartLatency | Per-window mean schedule-to-start latency (histogram bucket-midpoint mean, ADR-076). |
 | `tasks` | Snapshot.Tasks | Per-window completed task count (delta of cumulative task_count). |
 | `attempts` | Snapshot.Attempts | Per-window attempt count (delta of task_attempt + workflow_task_attempt). |
-| `resched_depth` | Snapshot.ReschedulerDepth | Current matching task-rescheduler pending queue depth. Backlog signal. |
+| `resched_depth` | Snapshot.ReschedulerDepth | DEPRECATED (ADR-076). History rescheduler pending depth, sampled (no longer a cumulative sum). |
+| `matching_backlog` | Snapshot.MatchingBacklogCount | Matching logical backlog (approximate_backlog_count), last-value per window, summed across priorities. Primary QueueMean source. |
+| `physical_backlog` | Snapshot.PhysicalMatchingBacklogCount | Matching physical backlog (physical_approximate_backlog_count), last-value per window. Emitted on ack/update paths only. |
+| `history_pending` | Snapshot.HistoryPendingTasks | History pending_tasks, last-value per shard summed across shards. |
+| `hist_resched_depth` | Snapshot.HistoryReschedulerDepth | History rescheduler pending executables (task_rescheduler_pending_tasks), sampled. |
+| `s2s_p50/p90/p99` | Snapshot.S2SHistogram | Per-window schedule-to-start latency percentiles derived from the 32-bucket log-scale histogram (lower bounds; bucket i covers [2^(i-1), 2^i) ms). |
 """)
         st.caption("All values are per-100ms-poll-window unless labeled 'running avg'. Hover chart legend for series names.")
 
     # --- Config + metadata ---
-    with st.expander("Config & Metadata", key=f"cfg_{run.name}"):
+    with st.expander("Config & Metadata", key=f"cfg_{k}"):
         c1, c2 = st.columns(2)
         with c1:
             if cfg:
@@ -479,7 +880,7 @@ def _render_run(run: Path, label: str) -> None:
 
     # --- Full results (collapsed by default) ---
     if results_file.exists():
-        with st.expander("Results (raw)", key=f"raw_{run.name}"):
+        with st.expander("Results (raw)", key=f"raw_{k}"):
             r = load_json_head(results_file)
             if isinstance(r, dict):
                 # Don't show SnapshotSeries in raw view (it's huge)
@@ -532,7 +933,7 @@ with st.sidebar:
     project = st.selectbox("Project", projects, format_func=lambda p: p.name,
         index=proj_names.index(proj_name) if proj_name in proj_names else 0,
         key="nav_proj", on_change=_on_project_change)
-    exps = sorted(e for e in project.iterdir() if e.is_dir())
+    exps = sorted(_experiments(project))
     exp_names = [e.name for e in exps]
     exp_name = qp.get("exp")
     exp = st.selectbox("Experiment", exps, format_func=lambda e: e.name,
@@ -555,7 +956,11 @@ with st.sidebar:
         default = None if ms_key in st.session_state else opts[:1]
         sel = st.multiselect("Runs (pick 2+ to compare)", opts, default=default,
             key=ms_key, on_change=_persist_nav)
-        st.caption(f"{len(opts)} runs — table sorts worst first. Click a run to focus it.")
+        if _is_scenario_group(exp):
+            st.caption(f"{len(opts)} runs across {len(_scenario_group_children(exp))} scenarios — "
+                "the table sorts storms first. The aggregate rows are per-run; pick runs to compare.")
+        else:
+            st.caption(f"{len(opts)} runs — table sorts storms first. Click a run to focus it.")
 
         # --- Aggregate metrics across all runs (below the run count) ---
         score = runs_df["Score"].dropna()
@@ -563,8 +968,8 @@ with st.sidebar:
         meta_n = int(runs_df["is_meta"].sum())
         agg = st.columns(3)
         agg[0].metric("Total runs", len(opts))
-        agg[1].metric("Metastable", f"{meta_n} ({meta_n / len(opts):.0%})",
-            help="Fraction of runs where the monitor declared metastability (weighted multi-dim score > epsilon for N consecutive windows).")
+        agg[1].metric("Storm", f"{meta_n} ({meta_n / len(opts):.0%})",
+            help="Fraction of bubble runs where the monitor declared a metastable episode (weighted multi-dim score > epsilon for N consecutive windows).")
         agg[2].metric("Median score", f"{score.median():.3f}" if not score.empty else "—",
             help="Median monitor score across all runs. Higher = further from baseline.")
         agg = st.columns(3)
@@ -573,7 +978,7 @@ with st.sidebar:
         agg[1].metric("Median sim", f"{sim.median():.0f} ms" if not sim.empty else "—",
             help="Median simulated duration across all runs (DES time, not wall-clock).")
         agg[2].metric("Stable", len(opts) - meta_n,
-            help="Runs with no declared metastability.")
+            help="Bubble runs with no declared metastable episode.")
 
 # --- localStorage resume bridge: copy URL params to localStorage on unload;
 # restore them into the URL on next load so the nav selection survives
@@ -597,6 +1002,13 @@ try {
 """, height=1)
 
 st.header(f"{project.name} / {exp.name}")
+
+# --- Experiment-level Summary/vectors files (model leg, composed confirm,
+# dose-response, envelope) — render before the per-run drill-down so the
+# report's tables are visible even when an experiment has no run dirs. ---
+if _render_summary_file(exp):
+    st.divider()
+
 if runs_df.empty:
     st.info("No runs with results.json under this experiment.")
     st.stop()
@@ -643,7 +1055,8 @@ else:
         if len(sdfs) >= 2:
             st.subheader("Cross-run comparison")
             metrics = ["retry_amp", "timeout_rate", "drop_rate", "task_rate",
-                "window_retry_amp", "queue_mean", "sched_to_start"]
+                "window_retry_amp", "queue_mean", "sched_to_start",
+                "matching_backlog", "history_pending", "s2s_p50", "s2s_p90", "s2s_p99"]
             avail = [m for m in metrics if sum(1 for d in sdfs.values() if m in d.columns) >= 2]
             if avail:
                 tabs = st.tabs([m.replace("_", " ") for m in avail])
@@ -658,7 +1071,7 @@ else:
         st.divider()
 
     # --- Per-run detail ---
-    for run, lb in sel_runs:
+    for i, (run, lb) in enumerate(sel_runs):
         with st.expander(f"Run {lb}", expanded=len(sel_runs) == 1,
-                key=f"run_{project.name}_{exp.name}_{run.name}"):
-            _render_run(run, lb)
+                key=f"run_{project.name}_{exp.name}_{run.name}_{i}"):
+            _render_run(run, lb, uid=f"{project.name}_{exp.name}", idx=i)

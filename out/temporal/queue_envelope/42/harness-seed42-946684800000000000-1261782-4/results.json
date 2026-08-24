@@ -1,0 +1,27 @@
+{
+  "name": "fault_amp",
+  "run_type": "bubble",
+  "seed": 42,
+  "workflowSuccess": 50,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 50,
+  "attemptedAdds": 301,
+  "rejectedAdds": 27,
+  "virtualElapsedMs": 7204,
+  "maxMatchingBacklog": 6,
+  "finalMatchingBacklog": 1,
+  "firstStormWindowDepth": 1,
+  "backlogWindowFrac": 0.410958904109589,
+  "historyPendingMax": 0,
+  "latency": {
+    "count": 17303,
+    "p50Ms": 512,
+    "p90Ms": 512,
+    "p99Ms": 1024,
+    "maxMs": 2048,
+    "meanMs": 481.21461596254983
+  },
+  "s2sCount": 17303,
+  "s2sP99Ms": 1024,
+  "loadedPartitionCount": 4
+}

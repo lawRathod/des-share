@@ -1,0 +1,56 @@
+{
+  "workload": {
+    "workflow": "fault_amp",
+    "burst_count": 50,
+    "arrival_rate": 0,
+    "burst_at_ms": 0,
+    "threshold": 1000,
+    "retry": {
+      "initial_interval_ms": 100,
+      "coefficient": 1,
+      "max_attempts": 0
+    },
+    "fault": {
+      "start_offset_ms": 1,
+      "duration_ms": 30000,
+      "drop_rate": 0,
+      "latency_ms": 20,
+      "wf_drop_rate": 0,
+      "completion_drop_rate": 0
+    },
+    "schedule_to_close_ms": 600000,
+    "schedule_to_start_ms": 0,
+    "timer_duration_ms": 0,
+    "fanout_k": 0,
+    "cascade_bad_fraction": 0,
+    "compensation_fault_mode": false
+  },
+  "temporal": {
+    "host": "localhost:7233",
+    "namespace": "default",
+    "task_queue": "e1-queue"
+  },
+  "harness": {
+    "seed": 42,
+    "sim_duration_ms": 60000,
+    "pollers": 4,
+    "consumer_concurrency": 5,
+    "workflow_exec_concurrency": 5,
+    "activity_exec_concurrency": 5,
+    "network_latency_ms": 2,
+    "network_jitter_ms": 0,
+    "network_partition_start_ms": 0,
+    "network_partition_end_ms": 0,
+    "activity_duration_ms": 0,
+    "persistence_latency_ms": 50,
+    "matching_max_task_batch_size": 10,
+    "persistence_pool_max_conns": 5,
+    "history_shards": 0,
+    "pollers_min": 0,
+    "pollers_max": 0,
+    "poller_scaling_minimum_backlog_ms": 0,
+    "poller_scaling_wait_ms": 0,
+    "poller_scaling_decisions_per_second": 0,
+    "backlog_metrics_emit_interval_ms": 100
+  }
+}

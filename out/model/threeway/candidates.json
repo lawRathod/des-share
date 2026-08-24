@@ -1,0 +1,155 @@
+[
+  {
+    "vector": {
+      "name": "activity_failure-activity-1-10000-0",
+      "kind": "activity_failure",
+      "target": "activity",
+      "start": 1,
+      "duration": 10000,
+      "rate": 0
+    },
+    "seed": 0,
+    "score": 44.788090909090904,
+    "attemptsPerStart": 11.9,
+    "fail": 0
+  },
+  {
+    "vector": {
+      "name": "activity_failure-activity-1-10000-0",
+      "kind": "activity_failure",
+      "target": "activity",
+      "start": 1,
+      "duration": 10000,
+      "rate": 0
+    },
+    "seed": 1,
+    "score": 44.788090909090904,
+    "attemptsPerStart": 11.9,
+    "fail": 0
+  },
+  {
+    "vector": {
+      "name": "activity_failure-activity-1-10000-0",
+      "kind": "activity_failure",
+      "target": "activity",
+      "start": 1,
+      "duration": 10000,
+      "rate": 0
+    },
+    "seed": 2,
+    "score": 44.788090909090904,
+    "attemptsPerStart": 11.9,
+    "fail": 0
+  },
+  {
+    "vector": {
+      "name": "compose-poller_min-matching-0-5000-1-activity_failure-activity-1-10000-0",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "confirm": {
+        "harness": {
+          "pollers": 2
+        }
+      },
+      "compose": [
+        {
+          "name": "poller_min-matching-0-5000-1",
+          "kind": "poller_min",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 1
+        },
+        {
+          "name": "activity_failure-activity-1-10000-0",
+          "kind": "activity_failure",
+          "target": "activity",
+          "start": 1,
+          "duration": 10000,
+          "rate": 0
+        }
+      ]
+    },
+    "seed": 0,
+    "score": 44.788090909090904,
+    "attemptsPerStart": 11.9,
+    "fail": 0
+  },
+  {
+    "vector": {
+      "name": "compose-poller_min-matching-0-5000-1-activity_failure-activity-1-10000-0",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "confirm": {
+        "harness": {
+          "pollers": 2
+        }
+      },
+      "compose": [
+        {
+          "name": "poller_min-matching-0-5000-1",
+          "kind": "poller_min",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 1
+        },
+        {
+          "name": "activity_failure-activity-1-10000-0",
+          "kind": "activity_failure",
+          "target": "activity",
+          "start": 1,
+          "duration": 10000,
+          "rate": 0
+        }
+      ]
+    },
+    "seed": 1,
+    "score": 44.788090909090904,
+    "attemptsPerStart": 11.9,
+    "fail": 0
+  },
+  {
+    "vector": {
+      "name": "compose-poller_min-matching-0-5000-1-activity_failure-activity-1-10000-0",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 0,
+      "rate": 0,
+      "confirm": {
+        "harness": {
+          "pollers": 2
+        }
+      },
+      "compose": [
+        {
+          "name": "poller_min-matching-0-5000-1",
+          "kind": "poller_min",
+          "target": "matching",
+          "start": 0,
+          "duration": 5000,
+          "rate": 1
+        },
+        {
+          "name": "activity_failure-activity-1-10000-0",
+          "kind": "activity_failure",
+          "target": "activity",
+          "start": 1,
+          "duration": 10000,
+          "rate": 0
+        }
+      ]
+    },
+    "seed": 2,
+    "score": 44.788090909090904,
+    "attemptsPerStart": 11.9,
+    "fail": 0
+  }
+]

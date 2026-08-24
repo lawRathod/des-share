@@ -1,0 +1,35 @@
+{
+  "name": "fault_amp",
+  "run_type": "bubble",
+  "seed": 42,
+  "workflowSuccess": 50,
+  "workflowFail": 0,
+  "uniqueWorkflowStarts": 50,
+  "attemptedAdds": 524,
+  "attemptedActivityAdds": 466,
+  "attemptedWorkflowAdds": 58,
+  "rejectedAdds": 162,
+  "virtualElapsedMs": 10851,
+  "attemptsPerSec": 48.29048014007926,
+  "attemptsPerStart": 10.48,
+  "monitorStatus": {
+    "Score": 15.280000000000003,
+    "Metastable": true,
+    "Recovered": true,
+    "WindowsSeen": 107,
+    "RecoveryTimeMs": null,
+    "MetastableAtMs": 10100,
+    "BaselineEndMs": 5000
+  },
+  "maxMatchingBacklog": 11,
+  "finalMatchingBacklog": 5,
+  "historyPendingMax": 0,
+  "latency": {
+    "count": 35022,
+    "p50Ms": 512,
+    "p90Ms": 512,
+    "p99Ms": 2048,
+    "maxMs": 2048,
+    "meanMs": 592.9933184855233
+  }
+}

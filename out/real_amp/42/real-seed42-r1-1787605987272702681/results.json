@@ -1,0 +1,14 @@
+{
+  "name": "fault_amp",
+  "run_type": "real",
+  "seed": 42,
+  "repeat": 1,
+  "workflowSuccess": 50,
+  "workflowFail": 0,
+  "attempts": 512,
+  "wallDurationMs": 12494,
+  "retryAmp": {
+    "attempts": 512,
+    "unique": 50
+  }
+}

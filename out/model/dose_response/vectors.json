@@ -1,0 +1,254 @@
+[
+  {
+    "vector": {
+      "name": "s2s_dose_100",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 100
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_125",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 125
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_150",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 150
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_200",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 200
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_300",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 300
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_400",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 400
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_500",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 500
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_700",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 700
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_1000",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 1000
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_1500",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 1500
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_2000",
+      "kind": "s2s_timeout",
+      "target": "matching",
+      "start": 0,
+      "duration": 5000,
+      "rate": 2000
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  },
+  {
+    "vector": {
+      "name": "s2s_dose_calm_1000",
+      "kind": "",
+      "target": "",
+      "start": 0,
+      "duration": 1,
+      "rate": 0
+    },
+    "seeds": 3,
+    "bestAttemptsPerStart": 1,
+    "meanAttemptsPerStart": 1,
+    "meanFail": 0,
+    "meanScore": 0,
+    "candidate": false,
+    "started": 150,
+    "failPerStart": 0,
+    "failPerStartSpread": 0,
+    "drainMs": 59999,
+    "maxQueue": 0
+  }
+]
